@@ -57,43 +57,43 @@
               <div class="mb-3">
                 <label for="imageUrl" class="form-label">Image URL</label>
                 <input
-                  type="text"
+                  type="url"
                   id="imageUrl"
                   class="form-control"
-                  aria-describedby="helpBlock"
-                  placeholder="https://example.com/image.png"
+                  placeholder="http://example.com/image.png"
                 />
-                <div id="helpBlock" class="form-text">
-                  Please Enter Image URL Here.
-                </div>
               </div>
               <div class="mb-3">
-                <label for="taskTitle" class="form-label"
-                  >Task Title</label
-                >
+                <label for="taskTitle" class="form-label">Task Title</label>
                 <input
                   type="text"
-                  class="form-control"
                   id="taskTitle"
+                  class="form-control"
                   placeholder="Task Title"
                   required
                 />
               </div>
               <div class="mb-3">
-                <label for="taskType" class="form-label"
-                  >Task Type</label
-                >
+                <label for="tags" class="form-label">Task Type</label>
                 <input
                   type="text"
+                  id="tags"
                   class="form-control"
-                  id="taskType"
-                  placeholder="Task Type"
+                  placeholder="Task Type Tags"
                   required
                 />
               </div>
               <div class="mb-3">
-                <label for="taskDesc" class="form-label">Task Description</label>
-                <textarea class="form-control" id="taskDesc" rows="2" placeholder="Task Description"></textarea>
+                <label for="taskDescription" class="form-label"
+                  >Task Description</label
+                >
+                <textarea
+                  type="text"
+                  id="taskDescription"
+                  class="form-control"
+                  placeholder="Task Description"
+                  required
+                ></textarea>
               </div>
             </form>
           </div>
@@ -105,7 +105,44 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open Task -->
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="showTask"
+      tabindex="-1"
+      aria-labelledby="showTaskLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="showTaskLabel">Task Details</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <!-- dynamic functionality -->
+          <div class="modal-body task__modal__body"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
           </div>
         </div>
       </div>
@@ -116,7 +153,7 @@
       data-bs-theme="dark"
     >
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Tasky Application</a>
+        <a class="navbar-brand text-white" href="#">Tasky Appln</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -126,19 +163,22 @@
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon text-white"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active text-white" aria-current="page" href="#"
+                >Home</a
+              >
             </li>
           </ul>
+
           <button
-            class="btn btn-outline-primary d-flex align-items-center gap-2"
-            type="submit"
+            class="btn btn-primary d-flex align-items-center gap-2"
             data-bs-toggle="modal"
             data-bs-target="#addNewModal"
+            type="submit"
           >
             <i class="fas fa-plus"></i>
             Add New Item
@@ -166,6 +206,7 @@
       </section>
 
       <section class="mt-4">
+        <!-- dynamic functionality -->
         <div class="row task__contents"></div>
       </section>
     </div>
