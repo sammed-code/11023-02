@@ -34,3 +34,44 @@ var htmlTaskContent = ({ id, title, description, type, url }) => `
         </div>
     </div>
 `;
+
+var htmlModalContent = ({id, title, description, url}) => {
+  var date = new Date(parseInt(id));
+  return `
+    <div id=${id}>
+      ${
+        url &&
+        `<img width='100%' src=${url} alt='card image cap' class='card-img-top md-3 rounded-lg' />`
+      }
+      <strong class='text-sm text-muted'>Created on ${date.toDateString()}</strong>
+      <h2 class='my-3'>${title}</h2>
+      <p class='lead'>${description}</p>
+    </div>
+  `;
+}
+
+var updateLocalStorage = () => {
+  localStorage.setItem('task', JSON.stringify({
+    tasks: state.taskList
+  }))
+}
+
+var loadInitialData = () => {
+  var localStorageCopy = JSON.parse(localStorage.tasks);
+  if (localStorageCopy) {
+    state.taskList = localStorageCopy.tasks;
+  }
+  state.taskList.map((cardDate) => {
+    taskContents.insertAdjacentHTML("beforeend", htmlTaskContent(cardDate));
+  })
+}
+
+var handleSubmit = (event) => {
+  const id = `${Date.now()}`;
+  const input = {
+    url: document.getElementById("imageUrl").value,
+    title: document.getElementById("taskTitle").value,
+    type: document.getElementById("tags").value,
+    description: document.getElementById("taskDescription").value
+  };
+}
