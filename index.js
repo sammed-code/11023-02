@@ -36,7 +36,7 @@ var htmlTaskContent = ({ id, title, description, type, url }) => `
     </div>
 `;
 
-var htmlModalContent = ({id, title, description, url}) => {
+var htmlModalContent = ({ id, title, description, url }) => {
   var date = new Date(parseInt(id));
   return `
     <div id=${id}>
@@ -50,13 +50,16 @@ var htmlModalContent = ({id, title, description, url}) => {
       <p class='lead'>${description}</p>
     </div>
   `;
-}
+};
 
 var updateLocalStorage = () => {
-  localStorage.setItem('task', JSON.stringify({
-    tasks: state.taskList
-  }))
-}
+  localStorage.setItem(
+    "task",
+    JSON.stringify({
+      tasks: state.taskList,
+    })
+  );
+};
 
 var loadInitialData = () => {
   var localStorageCopy = JSON.parse(localStorage.task);
@@ -65,8 +68,8 @@ var loadInitialData = () => {
   }
   state.taskList.map((cardDate) => {
     taskContents.insertAdjacentHTML("beforeend", htmlTaskContent(cardDate));
-  })
-}
+  });
+};
 
 var handleSubmit = (event) => {
   const id = `${Date.now()}`;
@@ -74,35 +77,39 @@ var handleSubmit = (event) => {
     url: document.getElementById("imageUrl").value,
     title: document.getElementById("taskTitle").value,
     type: document.getElementById("tags").value,
-    description: document.getElementById("taskDescription").value
+    description: document.getElementById("taskDescription").value,
   };
 
-  if (input.title === '' || input.type === '' || input.description === '') {
+  if (input.title === "" || input.type === "" || input.description === "") {
     return alert("Please fill all the required fields");
   }
 
   // spread operator
-  taskContents.insertAdjacentHTML("beforeend", htmlTaskContent({
-    ...input, id
-  }))
+  taskContents.insertAdjacentHTML(
+    "beforeend",
+    htmlTaskContent({
+      ...input,
+      id,
+    })
+  );
 
-  state.taskList.push({...input, id});
+  state.taskList.push({ ...input, id });
   updateLocalStorage();
-}
+};
 
 var openTask = (e) => {
-  if(!e) e = window.event;
+  if (!e) e = window.event;
 
-  var getTask = state.taskList.find(({id}) => id === e.target.id);
+  var getTask = state.taskList.find(({ id }) => id === e.target.id);
   taskModal.innerHTML = htmlModalContent(getTask);
-}
+};
 
 var deleteTask = (e) => {
   if (!e) e = window.event;
 
   var targetID = e.target.getAttribute("name");
   var type = e.target.tagName;
-  var removeTask = state.taskList.filter(({id}) => id !== targetID);
+  var removeTask = state.taskList.filter(({ id }) => id !== targetID);
 
   state.taskList = removeTask;
   updateLocalStorage();
@@ -115,7 +122,7 @@ var deleteTask = (e) => {
   return e.target.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(
     e.target.parentNode.parentNode.parentNode.parentNode
   );
-}
+};
 
 var editTask = (e) => {
   if (!e) e = window.event;
@@ -131,8 +138,7 @@ var editTask = (e) => {
 
   if (type === "BUTTON") {
     parentNode = e.target.parentNode.parentNode;
-  }
-  else {
+  } else {
     parentNode = e.target.parentNode.parentNode.parentNode;
   }
 
@@ -145,14 +151,67 @@ var editTask = (e) => {
   taskDescription.setAttribute("contenteditable", "true");
   taskType.setAttribute("contenteditable", "true");
 
-  // submitButton.setAttribute('onclick', "saveEdit.apply(this, arguments)");
+  submitButton.setAttribute("onclick", "saveEdit.apply(this, arguments)");
   submitButton.removeAttribute("data-bs-toggle");
   submitButton.removeAttribute("data-bs-target");
   submitButton.innerHTML = "Save Changes";
-}
+};
 
 var saveEdit = (e) => {
   if (!e) e = window.event;
-  
+
   var targetID = e.target.id;
-}
+  var parentNode = e.target.parentNode.parentNode;
+
+  var taskTitle = parentNode.childNodes[3].childNodes[3];
+  var taskDescription = parentNode.childNodes[3].childNodes[5];
+  var taskType = parentNode.childNodes[3].childNodes[7].childNodes[1];
+  var submitButton = parentNode.childNodes[5].childNodes[1];
+
+  var updateData = {
+    taskTitle: taskTitle.innerHTML,
+    taskDescription: taskDescription.innerHTML,
+    taskType: taskType.innerHTML,
+  };
+
+  var stateCopy = state.taskList;
+  stateCopy = stateCopy.map((task) =>
+    task.id === targetID
+      ? {
+          id: task.id,
+          title: updateData.taskTitle,
+          description: updateData.taskDescription,
+          type: updateData.taskType,
+          url: task.url,
+        }
+      : task
+  );
+
+  state.taskList = stateCopy;
+  updateLocalStorage();
+
+  taskTitle.setAttribute("contenteditable", "false");
+  taskDescription.setAttribute("contenteditable", "false");
+  taskType.setAttribute("contenteditable", "false");
+
+  submitButton.setAttribute("onclick", "openTask.apply(this, arguments)");
+  submitButton.setAttribute("data-bs-toggle", "modal");
+  submitButton.setAttribute("data-bs-target", "#showTask");
+  submitButton.innerHTML = "Open Task";
+};
+
+var searchTask = (e) => {
+  if (!e) e = window.event;
+
+  while (taskContents.firstChild) {
+    taskContents.removeChild(taskContents.firstChild);
+  }
+
+  var resultData = state.taskList.filter(({ title }) =>
+    title.includes(e.target.value)
+  );
+
+  resultData.map((cardData) => {
+    taskContents.insertAdjacentHTML("beforeend", htmlTaskContent(cardData));
+  });
+};
